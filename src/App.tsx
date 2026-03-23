@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 
 type Operation = '+' | '-' | '×' | '÷';
-
 type ActiveInput = 'first' | 'second';
 
 interface CalculatorState {
@@ -27,8 +26,7 @@ function normalizeNumber(value: string): number {
 }
 
 function formatResult(value: number): string {
-  const rounded = Number.isInteger(value) ? value.toString() : value.toString();
-  return rounded.replace('.', ',');
+  return value.toString().replace('.', ',');
 }
 
 export default function App() {
@@ -87,8 +85,10 @@ export default function App() {
       const key = prev.activeInput === 'first' ? 'firstValue' : 'secondValue';
       const current = prev[key];
       if (!current) return prev;
+
       const trimmed = current.slice(0, -1);
-      const updatedResult = prev.activeInput === 'first' ? (trimmed || '0') : prev.result;
+      const updatedResult = prev.activeInput === 'first' ? trimmed || '0' : prev.result;
+
       return {
         ...prev,
         [key]: trimmed,
@@ -138,91 +138,7 @@ export default function App() {
     });
   };
 
-  const buttonClass =
-    'rounded-xl px-4 py-4 text-xl font-semibold transition active:scale-[0.98]';
-
-  return (
-
-      return {
-        ...prev,
-        [key]: nextValue,
-        message: null,
-      };
-    });
-  };
-
-  const chooseOperation = (operation: Operation) => {
-    setState((prev) => {
-      const first = prev.firstValue || prev.result;
-      return {
-        ...prev,
-        firstValue: first === '0' ? '' : first,
-        operation,
-        activeInput: 'second',
-        message: null,
-      };
-    });
-  };
-
-  const clearAll = () => {
-    setState(initialState);
-  };
-
-  const backspace = () => {
-    setState((prev) => {
-      const key = prev.activeInput === 'first' ? 'firstValue' : 'secondValue';
-      const current = prev[key];
-      if (!current) return prev;
-      return {
-        ...prev,
-        [key]: current.slice(0, -1),
-        message: null,
-      };
-    });
-  };
-
-  const compute = () => {
-    setState((prev) => {
-      if (!prev.operation || !prev.firstValue || !prev.secondValue) {
-        return {
-          ...prev,
-          message: 'Veuillez saisir deux valeurs et choisir une opération.',
-        };
-      }
-
-      const a = normalizeNumber(prev.firstValue);
-      const b = normalizeNumber(prev.secondValue);
-
-      if (prev.operation === '÷' && b === 0) {
-        return {
-          ...prev,
-          message: 'La division par zéro est impossible.',
-          result: '0',
-        };
-      }
-
-      let value = 0;
-      if (prev.operation === '+') value = a + b;
-      if (prev.operation === '-') value = a - b;
-      if (prev.operation === '×') value = a * b;
-      if (prev.operation === '÷') value = a / b;
-
-      const formatted = formatResult(value);
-
-      return {
-        ...prev,
-        firstValue: formatted,
-        secondValue: '',
-        operation: null,
-        activeInput: 'first',
-        result: formatted,
-        message: null,
-      };
-    });
-  };
-
-  const buttonClass =
-    'rounded-xl px-4 py-4 text-xl font-semibold transition active:scale-[0.98]';
+  const buttonClass = 'rounded-xl px-4 py-4 text-xl font-semibold transition active:scale-[0.98]';
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 px-4 py-8">
@@ -287,5 +203,4 @@ export default function App() {
     </main>
   );
 }
-
 
