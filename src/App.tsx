@@ -53,6 +53,95 @@ export default function App() {
       }
 
       const nextValue = current === '0' && digit !== ',' ? digit : `${current}${digit}`;
+      const updatedResult = prev.activeInput === 'first' ? nextValue : prev.result;
+
+      return {
+        ...prev,
+        [key]: nextValue,
+        result: updatedResult,
+        message: null,
+      };
+    });
+  };
+
+  const chooseOperation = (operation: Operation) => {
+    setState((prev) => {
+      const first = prev.firstValue || prev.result;
+      return {
+        ...prev,
+        firstValue: first === '0' ? '' : first,
+        operation,
+        activeInput: 'second',
+        result: first || '0',
+        message: null,
+      };
+    });
+  };
+
+  const clearAll = () => {
+    setState(initialState);
+  };
+
+  const backspace = () => {
+    setState((prev) => {
+      const key = prev.activeInput === 'first' ? 'firstValue' : 'secondValue';
+      const current = prev[key];
+      if (!current) return prev;
+      const trimmed = current.slice(0, -1);
+      const updatedResult = prev.activeInput === 'first' ? (trimmed || '0') : prev.result;
+      return {
+        ...prev,
+        [key]: trimmed,
+        result: updatedResult,
+        message: null,
+      };
+    });
+  };
+
+  const compute = () => {
+    setState((prev) => {
+      if (!prev.operation || !prev.firstValue || !prev.secondValue) {
+        return {
+          ...prev,
+          message: 'Veuillez saisir deux valeurs et choisir une opération.',
+        };
+      }
+
+      const a = normalizeNumber(prev.firstValue);
+      const b = normalizeNumber(prev.secondValue);
+
+      if (prev.operation === '÷' && b === 0) {
+        return {
+          ...prev,
+          message: 'La division par zéro est impossible.',
+          result: '0',
+        };
+      }
+
+      let value = 0;
+      if (prev.operation === '+') value = a + b;
+      if (prev.operation === '-') value = a - b;
+      if (prev.operation === '×') value = a * b;
+      if (prev.operation === '÷') value = a / b;
+
+      const formatted = formatResult(value);
+
+      return {
+        ...prev,
+        firstValue: formatted,
+        secondValue: '',
+        operation: null,
+        activeInput: 'first',
+        result: formatted,
+        message: null,
+      };
+    });
+  };
+
+  const buttonClass =
+    'rounded-xl px-4 py-4 text-xl font-semibold transition active:scale-[0.98]';
+
+  return (
 
       return {
         ...prev,
@@ -198,4 +287,5 @@ export default function App() {
     </main>
   );
 }
+
 
