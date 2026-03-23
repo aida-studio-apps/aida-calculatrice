@@ -27,7 +27,7 @@ export function CalculatorForm() {
           type="text"
           inputMode="decimal"
           value={input.firstValue}
-          onChange={(event) => setFirstValue(event.target.value)}
+          onChange={(event) => setFirstValue(event.target.value.replace('.', ','))}
           className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-slate-500 focus:outline-none"
           placeholder="Ex : 2"
         />
@@ -44,7 +44,7 @@ export function CalculatorForm() {
           type="text"
           inputMode="decimal"
           value={input.secondValue}
-          onChange={(event) => setSecondValue(event.target.value)}
+          onChange={(event) => setSecondValue(event.target.value.replace('.', ','))}
           className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-slate-500 focus:outline-none"
           placeholder="Ex : 3"
         />
@@ -56,4 +56,6 @@ export function CalculatorForm() {
     </div>
   );
 }
+
+
 
